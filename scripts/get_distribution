@@ -82,7 +82,7 @@ def main():
     parser = buildArgsParser()
     args = parser.parse_args()
 
-    logger = logging.getLogger('noise distributions')
+    logger = logging.getLogger('autodmri')
 
     if args.logfile is not None:
         handler = logging.FileHandler(args.logfile)
