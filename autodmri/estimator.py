@@ -57,8 +57,7 @@ def estimate_from_dwis(data, axis=-2, return_mask=False, exclude_mask=None, ncor
     else:
         exclude_mask = exclude_mask.swapaxes(0, axis)
 
-    use_rejection = True
-    stuff = [(swapped_data[i], median, exclude_mask[i], method, use_rejection) for i in ranger]
+    stuff = [(swapped_data[i], median, exclude_mask[i], method) for i in ranger]
 
     parallel_inner = multiprocesser(_inner, n_cores=ncores)
     output = parallel_inner(stuff)
