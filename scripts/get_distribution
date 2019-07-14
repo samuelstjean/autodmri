@@ -146,14 +146,14 @@ def main():
 
         # Broadcast the 1D arrays to full 3D
         if axis == 0:
-            sigma = sigma[:,None,None]
-            N = N[:,None,None]
+            sigma = sigma[:, None, None]
+            N = N[:, None, None]
         elif axis == 1:
-            sigma = sigma[None,:,None]
-            N = N[None,:,None]
+            sigma = sigma[None, :, None]
+            N = N[None, :, None]
         elif axis == 2:
-            sigma = sigma[None,None,:]
-            N = N[None,None,:]
+            sigma = sigma[None, None, :]
+            N = N[None, None, :]
         else:
             raise ValueError('axis = {} is not 0, 1 or 2, but that should never happen!'.format(axis))
 
