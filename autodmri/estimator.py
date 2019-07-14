@@ -7,34 +7,7 @@ from scipy.special import gammaincinv
 
 from autodmri.gamma import get_noise_distribution
 from autodmri.blocks import extract_patches
-
-from functools import wraps
-
-try:
-    from multiprocessing import get_context
-    has_context = True
-except ImportError:
-    from multiprocessing import Pool
-    has_context = False
-
-
-def unpack(func):
-    @wraps(func)
-    def wrapper(arg_tuple):
-        return func(*arg_tuple)
-    return wrapper
-
-
-def multiproc(func, content, ncores=None):
-    if has_context:
-        with get_context().Pool(processes=ncores) as pool:
-            output = pool.map(func, content)
-    else:
-        pool = Pool(processes=ncores)
-        output = pool.map(func, content)
-        pool.close()
-        pool.join()
-    return output
+from autodmri.multiprocess import multiprocesser
 
 
 ###########################################
@@ -84,8 +57,11 @@ def estimate_from_dwis(data, axis=-2, return_mask=False, exclude_mask=None, ncor
     else:
         exclude_mask = exclude_mask.swapaxes(0, axis)
 
-    stuff = [(swapped_data[i], median, exclude_mask[i], method) for i in ranger]
-    output = multiproc(proc_inner, stuff, ncores=ncores)
+    use_rejection = True
+    stuff = [(swapped_data[i], median, exclude_mask[i], method, use_rejection) for i in ranger]
+
+    parallel_inner = multiprocesser(_inner, n_cores=ncores)
+    output = parallel_inner(stuff)
 
     # output is each slice we took along axis, so the mask might be reversed
     sigma = np.zeros(len(output))
@@ -102,7 +78,6 @@ def estimate_from_dwis(data, axis=-2, return_mask=False, exclude_mask=None, ncor
     return sigma, N
 
 
-@unpack
 def _inner(data, median, exclude_mask=None, method='moments', l=50, N_min=1, N_max=12, max_iter=100, eps=1e-3):
 
     def lambda_cdf(N, alpha_prob):
@@ -223,7 +198,9 @@ def estimate_from_nmaps(data, size=5, return_mask=True, method='moments', full=F
 
         indexer = list(np.ndindex(reshaped_maps.shape[:reshaped_maps.ndim//2 - 1]))
         content = ((reshaped_maps[i], median, size, method, use_rejection) for i in indexer)
-        output = multiproc(proc_inner, content, ncores=ncores)
+
+        parallel_proc_inner = multiprocesser(proc_inner, n_cores=ncores)
+        output = parallel_proc_inner(content)
 
         # Account for padding on each side
         indexer = [tuple(np.array(idx) + size//2) for idx in indexer]
@@ -245,7 +222,8 @@ def estimate_from_nmaps(data, size=5, return_mask=True, method='moments', full=F
         mask = np.zeros((reshaped_maps.shape[0], size**3), dtype=np.bool)
 
         content = ((reshaped_maps[i], median, size, method, use_rejection) for i in range(reshaped_maps.shape[0]))
-        output = multiproc(proc_inner, content, ncores=ncores)
+        parallel_proc_inner = multiprocesser(proc_inner, n_cores=ncores)
+        output = parallel_proc_inner(content)
 
         for i, (s, n, m) in enumerate(output):
             sigma[i] = s
@@ -272,7 +250,6 @@ def estimate_from_nmaps(data, size=5, return_mask=True, method='moments', full=F
         return interpolated_sigma, interpolated_N
 
 
-@unpack
 def proc_inner(cur_map, median, size, method, use_rejection):
 
     if use_rejection:
