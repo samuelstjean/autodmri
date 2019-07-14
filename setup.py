@@ -12,5 +12,6 @@ setup(
     description='Implementation of "Automated characterization of noise distributions in diffusion MRI data".',
     long_description=open('README.md').read(),
     install_requires=['numpy>=1.10',
-                      'scipy>=0.19'],
+                      'scipy>=0.19',
+                      'nibabel>=2.2'],
 )
