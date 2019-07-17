@@ -46,7 +46,7 @@ def extract_patches(arr, patch_shape, extraction_step, flatten=True):
     the patch content. This operation is immediate (O(1)). A reshape
     performed on the first n dimensions will cause numpy to copy data, leading
     to a list of extracted patches.
-    Read more in the :ref:`User Guide <image_feature_extraction>`.
+
     Parameters
     ----------
     arr : ndarray
