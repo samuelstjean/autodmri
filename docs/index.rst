@@ -24,7 +24,7 @@ The datasets are also available at zenodo_.
 You can find below the documentation for each modules.
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Modules:
 
    source/modules
