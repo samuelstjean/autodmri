@@ -1,4 +1,4 @@
-FROM ubuntu:18.04 AS builde
+FROM ubuntu:18.04
 
 ENV DEPENDS='numpy==1.16.4 scipy==1.2.2 nibabel==2.2.1' \
     autodmri_version='0.1'
@@ -12,4 +12,4 @@ RUN apt update && \
     pip3 install --no-cache-dir https://github.com/samuelstjean/autodmri/releases/download/v${autodmri_version}/autodmri-${autodmri_version}.tar.gz
 
 # default command that will be run
-CMD ["autodmri","--help"]
+CMD ["get_distribution","--help"]
