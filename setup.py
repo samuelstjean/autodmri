@@ -13,5 +13,6 @@ setup(
     long_description=open('README.md').read(),
     install_requires=['numpy>=1.10',
                       'scipy>=0.19',
+                      'joblib>=0.12',
                       'nibabel>=2.2'],
 )
