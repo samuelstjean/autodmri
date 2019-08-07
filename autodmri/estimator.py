@@ -15,7 +15,7 @@ from joblib import Parallel, delayed
 ###########################################
 
 
-def estimate_from_dwis(data, axis=-2, return_mask=False, exclude_mask=None, ncores=None, method='moments'):
+def estimate_from_dwis(data, axis=-2, return_mask=False, exclude_mask=None, ncores=-1, method='moments'):
     '''Given the data, splits over each slice to compute parameters of the gamma distribution
 
     input
@@ -156,7 +156,7 @@ def _inner(data, median, exclude_mask=None, method='moments', l=50, N_min=1, N_m
 ###########################################
 
 
-def estimate_from_nmaps(data, size=5, return_mask=True, method='moments', full=False, ncores=None, use_rejection=False):
+def estimate_from_nmaps(data, size=5, return_mask=True, method='moments', full=False, ncores=-1, use_rejection=False):
     '''Given the data, estimates parameters of the gamma distribution in small 3D windows.
 
     input

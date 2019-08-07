@@ -51,7 +51,7 @@ def buildArgsParser():
     p.add_argument('-m', '--method', default='moments', choices=['moments', 'maxlk'], metavar='string',
                    help='Method to use for estimating parameters, either "moments" or "maxlk".')
 
-    p.add_argument('--ncores', metavar='int', type=int,
+    p.add_argument('--ncores', metavar='int', type=int, default=-1,
                    help='Number of cores to use for multithreading.')
 
     p.add_argument('--exclude', metavar='file',
