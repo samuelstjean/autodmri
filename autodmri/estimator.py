@@ -57,9 +57,7 @@ def estimate_from_dwis(data, axis=-2, return_mask=False, exclude_mask=None, ncor
     else:
         exclude_mask = exclude_mask.swapaxes(0, axis)
 
-    output = Parallel(n_jobs=ncores,
-                      pre_dispatch='all',
-                      verbose=5)(delayed(_inner)(swapped_data[i], median, exclude_mask[i], method) for i in ranger)
+    output = Parallel(n_jobs=ncores)(delayed(_inner)(swapped_data[i], median, exclude_mask[i], method) for i in ranger)
 
     # output is each slice we took along axis, so the mask might be reversed
     sigma = np.zeros(len(output))
@@ -196,9 +194,7 @@ def estimate_from_nmaps(data, size=5, return_mask=True, method='moments', full=F
 
         indexer = np.ndindex(reshaped_maps.shape[:reshaped_maps.ndim//2 - 1])
 
-        output = Parallel(n_jobs=ncores,
-                          pre_dispatch='all',
-                          verbose=5)(delayed(proc_inner)(reshaped_maps[i], median, size, method, use_rejection) for i in indexer)
+        output = Parallel(n_jobs=ncores)(delayed(proc_inner)(reshaped_maps[i], median, size, method, use_rejection) for i in indexer)
 
         # Account for padding on each side
         indexer = [tuple(np.array(idx) + size//2) for idx in indexer]
@@ -219,9 +215,7 @@ def estimate_from_nmaps(data, size=5, return_mask=True, method='moments', full=F
         N = np.zeros(reshaped_maps.shape[0], dtype=np.float32)
         mask = np.zeros((reshaped_maps.shape[0], size**3), dtype=np.bool)
 
-        output = Parallel(n_jobs=ncores,
-                          pre_dispatch='all',
-                          verbose=5)(delayed(proc_inner)(reshaped_maps[i], median, size, method, use_rejection) for i in range(reshaped_maps.shape[0]))
+        output = Parallel(n_jobs=ncores)(delayed(proc_inner)(reshaped_maps[i], median, size, method, use_rejection) for i in range(reshaped_maps.shape[0]))
 
         for i, (s, n, m) in enumerate(output):
             sigma[i] = s
