@@ -136,13 +136,13 @@ def main():
             overlap = 'non overlapping windows'
 
         logger.info('Estimation will be done over noise maps with a window of size {} and {}'.format(size, overlap))
-        sigma, N, mask = estimate_from_nmaps(data, size=size, return_mask=True, method=method, full=full, ncores=ncores, use_rejection=False)
+        sigma, N, mask = estimate_from_nmaps(data, size=size, return_mask=True, method=method, full=full, ncores=ncores, use_rejection=False, verbose=args.verbose)
 
     else:
         if axis < 0:
             axis = data.ndim + axis
 
-        sigma, N, mask = estimate_from_dwis(data, axis=axis, return_mask=True, exclude_mask=exclude_mask, ncores=ncores, method=method)
+        sigma, N, mask = estimate_from_dwis(data, axis=axis, return_mask=True, exclude_mask=exclude_mask, ncores=ncores, method=method, verbose=args.verbose)
 
         # Broadcast the 1D arrays to full 3D
         if axis == 0:
