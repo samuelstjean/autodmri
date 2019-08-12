@@ -197,8 +197,11 @@ def estimate_from_nmaps(data, size=5, return_mask=True, method='moments', full=F
         mask = np.zeros(data.shape[:-1], dtype=np.int16)
 
         indexer = np.ndindex(reshaped_maps.shape[:reshaped_maps.ndim//2 - 1])
+        batch_size = int(np.prod(reshaped_maps.shape[:reshaped_maps.ndim//2]) // 100)
 
-        output = Parallel(n_jobs=ncores, verbose=verbose)(delayed(proc_inner)(reshaped_maps[i], median, size, method, use_rejection) for i in indexer)
+        output = Parallel(n_jobs=ncores,
+                          batch_size=batch_size,
+                          verbose=verbose)(delayed(proc_inner)(reshaped_maps[i], median, size, method, use_rejection) for i in indexer)
 
         # Account for padding on each side
         indexer = [tuple(np.array(idx) + size//2) for idx in indexer]
@@ -219,7 +222,10 @@ def estimate_from_nmaps(data, size=5, return_mask=True, method='moments', full=F
         N = np.zeros(reshaped_maps.shape[0], dtype=np.float32)
         mask = np.zeros((reshaped_maps.shape[0], size**3), dtype=np.bool)
 
-        output = Parallel(n_jobs=ncores, verbose=verbose)(delayed(proc_inner)(reshaped_maps[i], median, size, method, use_rejection) for i in range(reshaped_maps.shape[0]))
+        batch_size = reshaped_maps.shape[0] // 100
+        output = Parallel(n_jobs=ncores,
+                          batch_size=batch_size,
+                          verbose=verbose)(delayed(proc_inner)(reshaped_maps[i], median, size, method, use_rejection) for i in range(reshaped_maps.shape[0]))
 
         for i, (s, n, m) in enumerate(output):
             sigma[i] = s
