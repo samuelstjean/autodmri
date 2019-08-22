@@ -2,7 +2,7 @@
 
 Automated characterization of noise distributions in diffusion MRI data
 
-You can find the preprint of the manuscript here https://www.biorxiv.org/content/10.1101/686436v1
+You can find the [preprint of the manuscript](https://doi.org/10.1101/686436)
 and the datasets are available here https://zenodo.org/record/2483105
 
 The documentation is also available at http://autodmri.rtfd.io/
