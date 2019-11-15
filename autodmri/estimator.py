@@ -194,9 +194,10 @@ def estimate_from_nmaps(data, size=5, return_mask=True, method='moments', full=F
 
         sigma = np.zeros(data.shape[:-1], dtype=np.float32)
         N = np.zeros(data.shape[:-1], dtype=np.float32)
+        count = np.zeros(data.shape[:-1], dtype=np.int16)
         mask = np.zeros(data.shape[:-1], dtype=np.int16)
 
-        indexer = np.ndindex(reshaped_maps.shape[:reshaped_maps.ndim//2 - 1])
+        indexer = list(np.ndindex(reshaped_maps.shape[:reshaped_maps.ndim//2 - 1]))
         batch_size = int(np.prod(reshaped_maps.shape[:reshaped_maps.ndim//2]) // 100)
 
         output = Parallel(n_jobs=ncores,
@@ -204,12 +205,19 @@ def estimate_from_nmaps(data, size=5, return_mask=True, method='moments', full=F
                           verbose=verbose)(delayed(proc_inner)(reshaped_maps[i], median, size, method, use_rejection) for i in indexer)
 
         # Account for padding on each side
-        indexer = [tuple(np.array(idx) + size//2) for idx in indexer]
+        indexer = (tuple(np.array(idx) + size//2) for idx in indexer)
+        indexer = (np.index_exp[idx[0]:idx[0] + size, idx[1]:idx[1] + size, idx[2]:idx[2] + size] for idx in indexer)
 
+        # We accumulate the value at each voxel then take the average over the overlap
         for idx, (s, n, m) in zip(indexer, output):
-            sigma[idx] = s
-            N[idx] = n
+            sigma[idx] += s
+            N[idx] += n
+
             mask[idx] = m.sum()
+            count[idx] += 1
+
+        sigma /= count
+        N /= count
 
         if return_mask:
             return sigma, N, mask
