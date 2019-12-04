@@ -7,15 +7,15 @@ from scipy.special import gammaincinv
 
 from autodmri.gamma import get_noise_distribution
 from autodmri.blocks import extract_patches
-from autodmri.multiprocess import multiprocesser
 
+from joblib import Parallel, delayed
 
 ###########################################
 # These functions are for over dwis
 ###########################################
 
 
-def estimate_from_dwis(data, axis=-2, return_mask=False, exclude_mask=None, ncores=None, method='moments'):
+def estimate_from_dwis(data, axis=-2, return_mask=False, exclude_mask=None, ncores=-1, method='moments', verbose=0):
     '''Given the data, splits over each slice to compute parameters of the gamma distribution
 
     input
@@ -33,6 +33,8 @@ def estimate_from_dwis(data, axis=-2, return_mask=False, exclude_mask=None, ncor
         ncores : int, number of cores to use for multiprocessing
 
         method='moments' or method='maxlk' : which algorithm to use to estimate sigma and N
+
+        verbose : print progress for joblib, can be an integer to increase verbosity
 
     output
     -------
@@ -57,10 +59,7 @@ def estimate_from_dwis(data, axis=-2, return_mask=False, exclude_mask=None, ncor
     else:
         exclude_mask = exclude_mask.swapaxes(0, axis)
 
-    stuff = [(swapped_data[i], median, exclude_mask[i], method) for i in ranger]
-
-    parallel_inner = multiprocesser(_inner, n_cores=ncores)
-    output = parallel_inner(stuff)
+    output = Parallel(n_jobs=ncores, verbose=verbose)(delayed(_inner)(swapped_data[i], median, exclude_mask[i], method) for i in ranger)
 
     # output is each slice we took along axis, so the mask might be reversed
     sigma = np.zeros(len(output))
@@ -157,7 +156,7 @@ def _inner(data, median, exclude_mask=None, method='moments', l=50, N_min=1, N_m
 ###########################################
 
 
-def estimate_from_nmaps(data, size=5, return_mask=True, method='moments', full=False, ncores=None, use_rejection=False):
+def estimate_from_nmaps(data, size=5, return_mask=True, method='moments', full=False, ncores=-1, use_rejection=False, verbose=0):
     '''Given the data, estimates parameters of the gamma distribution in small 3D windows.
 
     input
@@ -178,6 +177,8 @@ def estimate_from_nmaps(data, size=5, return_mask=True, method='moments', full=F
 
         use_rejection : if True, iterate to reject voxels in each estimated window, but this is much slower than just using all of the data.
 
+        verbose : print progress for joblib, can be an integer to increase verbosity
+
     output
     -------
     sigma, N, mask (optional)
@@ -193,21 +194,28 @@ def estimate_from_nmaps(data, size=5, return_mask=True, method='moments', full=F
 
         sigma = np.zeros(data.shape[:-1], dtype=np.float32)
         N = np.zeros(data.shape[:-1], dtype=np.float32)
+        count = np.zeros(data.shape[:-1], dtype=np.int16)
         mask = np.zeros(data.shape[:-1], dtype=np.int16)
 
         indexer = list(np.ndindex(reshaped_maps.shape[:reshaped_maps.ndim//2 - 1]))
-        content = ((reshaped_maps[i], median, size, method, use_rejection) for i in indexer)
 
-        parallel_proc_inner = multiprocesser(proc_inner, n_cores=ncores)
-        output = parallel_proc_inner(content)
+        output = Parallel(n_jobs=ncores,
+                          verbose=verbose)(delayed(proc_inner)(reshaped_maps[i], median, size, method, use_rejection) for i in indexer)
 
         # Account for padding on each side
-        indexer = [tuple(np.array(idx) + size//2) for idx in indexer]
+        indexer = (tuple(np.array(idx) + size//2) for idx in indexer)
+        indexer = (np.index_exp[idx[0]:idx[0] + size, idx[1]:idx[1] + size, idx[2]:idx[2] + size] for idx in indexer)
 
+        # We accumulate the value at each voxel then take the average over the overlap
         for idx, (s, n, m) in zip(indexer, output):
-            sigma[idx] = s
-            N[idx] = n
+            sigma[idx] += s
+            N[idx] += n
+
             mask[idx] = m.sum()
+            count[idx] += 1
+
+        sigma /= count
+        N /= count
 
         if return_mask:
             return sigma, N, mask
@@ -220,9 +228,8 @@ def estimate_from_nmaps(data, size=5, return_mask=True, method='moments', full=F
         N = np.zeros(reshaped_maps.shape[0], dtype=np.float32)
         mask = np.zeros((reshaped_maps.shape[0], size**3), dtype=np.bool)
 
-        content = ((reshaped_maps[i], median, size, method, use_rejection) for i in range(reshaped_maps.shape[0]))
-        parallel_proc_inner = multiprocesser(proc_inner, n_cores=ncores)
-        output = parallel_proc_inner(content)
+        output = Parallel(n_jobs=ncores,
+                          verbose=verbose)(delayed(proc_inner)(reshaped_maps[i], median, size, method, use_rejection) for i in range(reshaped_maps.shape[0]))
 
         for i, (s, n, m) in enumerate(output):
             sigma[i] = s

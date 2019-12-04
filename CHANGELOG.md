@@ -1,5 +1,9 @@
 # Changelog
 
+## [v0.1]
+
+- Now using joblib for the multiprocessing backend
+
 ## [v0.1] - 2019-05-17
 
 The first release.

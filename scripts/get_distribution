@@ -17,7 +17,16 @@ Main script for automatically characterizing noise distributions.
 """
 
 EPILOG = """
-Reference :
+Reference:
+
+MICCAI version
+---------------
+St-Jean, S. et al. (2018) Automatic, Fast and Robust Characterization of Noise Distributions for Diffusion MRI, MICCAI 2018.
+Springer International Publishing, pp. 304–312. doi: 10.1007/978-3-030-00928-1_35.
+Available at: https://arxiv.org/abs/1805.12071
+
+Preprint version
+-----------------
 St-Jean, S. et al. (2019) Automated characterization of noise distributions in diffusion MRI data, Bioarxiv. doi: 10.1101/686436.
 Available at: https://www.biorxiv.org/content/10.1101/686436v1
 """
@@ -51,7 +60,7 @@ def buildArgsParser():
     p.add_argument('-m', '--method', default='moments', choices=['moments', 'maxlk'], metavar='string',
                    help='Method to use for estimating parameters, either "moments" or "maxlk".')
 
-    p.add_argument('--ncores', metavar='int', type=int,
+    p.add_argument('--ncores', metavar='int', type=int, default=-1,
                    help='Number of cores to use for multithreading.')
 
     p.add_argument('--exclude', metavar='file',
@@ -136,13 +145,13 @@ def main():
             overlap = 'non overlapping windows'
 
         logger.info('Estimation will be done over noise maps with a window of size {} and {}'.format(size, overlap))
-        sigma, N, mask = estimate_from_nmaps(data, size=size, return_mask=True, method=method, full=full, ncores=ncores, use_rejection=False)
+        sigma, N, mask = estimate_from_nmaps(data, size=size, return_mask=True, method=method, full=full, ncores=ncores, use_rejection=False, verbose=args.verbose)
 
     else:
         if axis < 0:
             axis = data.ndim + axis
 
-        sigma, N, mask = estimate_from_dwis(data, axis=axis, return_mask=True, exclude_mask=exclude_mask, ncores=ncores, method=method)
+        sigma, N, mask = estimate_from_dwis(data, axis=axis, return_mask=True, exclude_mask=exclude_mask, ncores=ncores, method=method, verbose=args.verbose)
 
         # Broadcast the 1D arrays to full 3D
         if axis == 0:
