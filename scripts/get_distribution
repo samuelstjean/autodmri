@@ -17,7 +17,16 @@ Main script for automatically characterizing noise distributions.
 """
 
 EPILOG = """
-Reference :
+Reference:
+
+MICCAI version
+---------------
+St-Jean, S. et al. (2018) Automatic, Fast and Robust Characterization of Noise Distributions for Diffusion MRI, MICCAI 2018.
+Springer International Publishing, pp. 304–312. doi: 10.1007/978-3-030-00928-1_35.
+Available at: https://arxiv.org/abs/1805.12071
+
+Preprint version
+-----------------
 St-Jean, S. et al. (2019) Automated characterization of noise distributions in diffusion MRI data, Bioarxiv. doi: 10.1101/686436.
 Available at: https://www.biorxiv.org/content/10.1101/686436v1
 """
