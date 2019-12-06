@@ -1,8 +1,10 @@
 # Changelog
 
-## [v0.1]
+## [v0.2] - development version
 
 - Now using joblib for the multiprocessing backend
+- When selecting overlapping noise maps measurements without subsampling (option --noise_maps), values are now averaged for each overlapping voxel.
+- New fancy example available at https://github.com/samuelstjean/autodmri/example
 
 ## [v0.1] - 2019-05-17
 
