@@ -28,15 +28,6 @@ autodmri.gamma module
    :undoc-members:
    :show-inheritance:
 
-autodmri.multiprocess module
-----------------------------
-
-.. automodule:: autodmri.multiprocess
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
 Module contents
 ---------------
 
