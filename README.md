@@ -6,6 +6,11 @@
 
 ###  The example and documentation
 
+The latest version can be installed with
+~~~
+pip install autodmri
+~~~
+
 You can find a quick example and datasets over [here](example) and the full documentation at http://autodmri.rtfd.io/.
 
 ### Using Docker
