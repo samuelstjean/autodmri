@@ -20,7 +20,7 @@ jobs:
     - name: Build and publish
       env:
         TWINE_USERNAME: __token__
-        TWINE_PASSWORD: pypi-AgEIcHlwaS5vcmcCJDdjOTA3MjJhLTgxMTItNGZjZi04MGVjLTU2ZDkzMGM5NmJhMwACJXsicGVybWlzc2lvbnMiOiAidXNlciIsICJ2ZXJzaW9uIjogMX0AAAYgL1xM63V9Chj0EuslX-KaGe9PH4_lqvQXKQDY_J2MVOU
+        TWINE_PASSWORD: secrets.pypi_password
       run: |
         python setup.py sdist bdist_wheel
         twine upload dist/*
