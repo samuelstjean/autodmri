@@ -1,5 +1,8 @@
 from setuptools import setup, find_packages
 
+with open('README.md', encoding='utf-8') as f:
+    long_description = f.read()
+
 setup(
     name='autodmri',
     version='0.2',
@@ -10,7 +13,8 @@ setup(
     url='https://github.com/samuelstjean/autodmri',
     license='LICENSE',
     description='Implementation of "Automated characterization of noise distributions in diffusion MRI data".',
-    long_description=open('README.md').read(),
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     install_requires=['numpy>=1.10',
                       'scipy>=0.19',
                       'joblib>=0.12',
