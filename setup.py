@@ -11,7 +11,7 @@ setup(
     packages=find_packages(),
     scripts=['scripts/get_distribution'],
     url='https://github.com/samuelstjean/autodmri',
-    license='LICENSE',
+    license='MIT',
     description='Implementation of "Automated characterization of noise distributions in diffusion MRI data".',
     long_description=long_description,
     long_description_content_type='text/markdown',
