@@ -1,11 +1,12 @@
+import io
 from setuptools import setup, find_packages
 
-with open('README.md', encoding='utf-8') as f:
+with io.open('README.md', encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
     name='autodmri',
-    version='0.2',
+    version='0.2.1',
     author='Samuel St-Jean',
     author_email='samuel@isi.uu.nl',
     packages=find_packages(),
