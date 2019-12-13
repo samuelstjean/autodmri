@@ -1,5 +1,8 @@
 # Changelog
 
+## [v0.2.1] -  2019-12-13
+
+- Bugfix: Use io.open for backward compatibility in python 2.7 for setup.py.
 
 ## [v0.2] -  2019-12-09
 
