@@ -1,6 +1,6 @@
 # Changelog
 
-## [development version]
+## [v0.2.2] -  2020-01-13
 
 - Bugfix: Remove non ascii char in get_distribution for python 2.
 
