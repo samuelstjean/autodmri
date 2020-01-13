@@ -1,5 +1,9 @@
 # Changelog
 
+## [development version]
+
+- Bugfix: Remove non ascii char in get_distribution for python 2.
+
 ## [v0.2.1] -  2019-12-13
 
 - Bugfix: Use io.open for backward compatibility in python 2.7 for setup.py.
