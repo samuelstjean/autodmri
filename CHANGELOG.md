@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.2.3] -  2020-06-22
+
+- Add new option **--fast_median** to reduce time and memory usage for large datasets such as the HCP datasets.
+- Add journal manuscript reference.
+
 ## [v0.2.2] -  2020-01-13
 
 - Bugfix: Remove non ascii char in get_distribution for python 2.

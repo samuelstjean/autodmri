@@ -15,7 +15,7 @@ from joblib import Parallel, delayed
 ###########################################
 
 
-def estimate_from_dwis(data, axis=-2, return_mask=False, exclude_mask=None, ncores=-1, method='moments', verbose=0):
+def estimate_from_dwis(data, axis=-2, return_mask=False, exclude_mask=None, ncores=-1, method='moments', verbose=0, fast_median=False):
     '''Given the data, splits over each slice to compute parameters of the gamma distribution
 
     input
@@ -36,6 +36,9 @@ def estimate_from_dwis(data, axis=-2, return_mask=False, exclude_mask=None, ncor
 
         verbose : print progress for joblib, can be an integer to increase verbosity
 
+        fast_median : Computes the median of medians from each volume.
+        Useful for large datasets with many volumes (e.g. HCP) since the median requires a full copy of the data and sorting.
+
     output
     -------
     sigma, N, mask (optional)
@@ -43,10 +46,24 @@ def estimate_from_dwis(data, axis=-2, return_mask=False, exclude_mask=None, ncor
 
     # guess a gross upper bound of sigma
     # if it's masked, median can be zero, so use the nonzero data
-    median = np.median(data)
+    if fast_median:
+        medians = np.zeros(data.shape[-1])
 
-    if median == 0:
-        median = np.median(data[data > 0])
+        for idx in range(data.shape[-1]):
+            chunk = data[..., idx]
+            median = np.median(chunk)
+
+            if median == 0:
+                median = np.median(chunk[chunk > 0])
+
+            medians[idx] = median
+
+        median = np.median(medians)
+    else:
+        median = np.median(data)
+
+        if median == 0:
+            median = np.median(data[data > 0])
 
     if axis < 0:
         axis = data.ndim + axis

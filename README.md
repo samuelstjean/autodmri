@@ -1,8 +1,8 @@
 # Automated characterization of noise distributions in diffusion MRI data
 
-[preprint]: https://doi.org/10.1101/686436
 [miccai]: https://arxiv.org/abs/1805.12071
 [miccai_publisher]: https://link.springer.com/chapter/10.1007%2F978-3-030-00928-1_35
+[media]: https://www.sciencedirect.com/science/article/pii/S1361841520301225
 
 ###  The example and documentation
 
@@ -19,8 +19,8 @@ If you have docker, you do not need to install anything else and can use the Doc
 You can then mount your data folder to run the script and get the results into the same folder like this.
 
 ~~~
-docker build -t autodmri:v0.2 .
-docker run -it -v /home/samuel/git/autodmri/datasets:/mnt autodmri:v0.2 get_distribution /mnt/data_SENSE3_MB3_dwi.nii.gz /mnt/sigma.nii.gz /mnt/N.nii.gz /mnt/mask.nii.gz
+docker build -t autodmri:latest .
+docker run -it -v /home/samuel/git/autodmri/datasets:/mnt autodmri:latest get_distribution /mnt/data_SENSE3_MB3_dwi.nii.gz /mnt/sigma.nii.gz /mnt/N.nii.gz /mnt/mask.nii.gz
 ~~~
 
 Just be sure to adapt the path and filename of your data or add more options as needed.
@@ -28,20 +28,32 @@ Just be sure to adapt the path and filename of your data or add more options as 
 
 ###  The manuscript and references
 
-The conference version of the manuscript (as published in MICCAI 2018) is available [here][miccai]
+You can read the [journal version][media] in Medical Image Analysis and the datasets are available here https://zenodo.org/record/2483105.
+
+The conference version of the manuscript (as published in MICCAI 2018) is available [here][miccai] for free
 and from the [publisher][miccai_publisher].
 
-You can find the [preprint of the journal version][preprint]
-and the datasets are available here https://zenodo.org/record/2483105
-
-
-Here is a bibtex entry for the conference manuscript and the preprint to the journal version
-
-<details>
-      <summary>Bibtex for the manuscript</summary>
+Here is a bibtex entry for the journal version
 
 ~~~
-@InProceedings{10.1007/978-3-030-00928-1_35,
+@article{St-jean2020_media,
+author = {St-Jean, Samuel and {De Luca}, Alberto and Tax, Chantal M.W. and Viergever, Max A. and Leemans, Alexander},
+doi = {10.1016/j.media.2020.101758},
+eprint = {1906.12121},
+issn = {13618415},
+journal = {Medical Image Analysis},
+month = {jun},
+pages = {101758},
+title = {{Automated characterization of noise distributions in diffusion MRI data}},
+url = {https://linkinghub.elsevier.com/retrieve/pii/S1361841520301225},
+year = {2020}
+}
+~~~
+
+and for the conference manuscript in MICCAI
+
+~~~
+@InProceedings{St-jean2018_miccai,
 author="St-Jean, Samuel
 and De Luca, Alberto
 and Viergever, Max A.
@@ -60,28 +72,6 @@ pages="304--312",
 isbn="978-3-030-00928-1"
 }
 ~~~
-
-</details>
-
-
-<details>
-      <summary>Bibtex for the preprint</summary>
-
-~~~
-@article {St-Jean686436,
-    author = {St-Jean, Samuel and De Luca, Alberto and Tax, Chantal M. W. and Viergever, Max A. and Leemans, Alexander},
-    title = {Automated characterization of noise distributions in diffusion MRI data},
-    elocation-id = {686436},
-    year = {2019},
-    doi = {10.1101/686436},
-    publisher = {Cold Spring Harbor Laboratory},
-    URL = {https://www.biorxiv.org/content/early/2019/08/15/686436},
-    eprint = {https://www.biorxiv.org/content/early/2019/08/15/686436.full.pdf},
-    journal = {bioRxiv}
-}
-~~~
-
-</details>
 
 
 ###  Referencing the code itself
