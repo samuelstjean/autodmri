@@ -9,7 +9,7 @@ RUN apt update && \
     # get python deps
     pip3 install --no-cache-dir $DEPENDS && \
     # install autodmri itself
-    pip3 install --no-cache-dir https://github.com/samuelstjean/autodmri/releases/download/v${autodmri_version}/autodmri-${autodmri_version}.tar.gz
+    pip3 install --no-cache-dir autodmri==${autodmri_version}
 
 # default command that will be run
 CMD ["get_distribution","--help"]
