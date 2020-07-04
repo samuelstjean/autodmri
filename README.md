@@ -19,8 +19,8 @@ If you have docker, you do not need to install anything else and can use the Doc
 You can then mount your data folder to run the script and get the results into the same folder like this.
 
 ~~~
-docker build -t autodmri:latest .
-docker run -it -v /home/samuel/git/autodmri/datasets:/mnt autodmri:latest get_distribution /mnt/data_SENSE3_MB3_dwi.nii.gz /mnt/sigma.nii.gz /mnt/N.nii.gz /mnt/mask.nii.gz
+docker pull samuelstjean/autodmri
+docker run -it -v /home/samuel/git/autodmri/datasets:/mnt samuelstjean/autodmri get_distribution /mnt/data_SENSE3_MB3_dwi.nii.gz /mnt/sigma.nii.gz /mnt/N.nii.gz /mnt/mask.nii.gz
 ~~~
 
 Just be sure to adapt the path and filename of your data or add more options as needed.
