@@ -152,6 +152,9 @@ def main():
         else:
             overlap = 'non overlapping windows'
 
+        if noise_maps.ndim == 3:
+            noise_maps = noise_maps[..., None]
+
         logger.info('Estimation will be done over noise maps with a window of size {} and {}'.format(size, overlap))
         sigma, N, mask = estimate_from_nmaps(data, size=size, return_mask=True, method=method, full=full, ncores=ncores, use_rejection=False, verbose=args.verbose)
 

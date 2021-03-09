@@ -211,16 +211,14 @@ def estimate_from_nmaps(data, size=5, return_mask=True, method='moments', full=F
 
         sigma = np.zeros(data.shape[:-1], dtype=np.float32)
         N = np.zeros(data.shape[:-1], dtype=np.float32)
-        count = np.zeros(data.shape[:-1], dtype=np.int16)
-        mask = np.zeros(data.shape[:-1], dtype=np.int16)
+        count = np.zeros(data.shape[:-1], dtype=np.int32)
+        mask = np.zeros(data.shape[:-1], dtype=np.int32)
 
         indexer = list(np.ndindex(reshaped_maps.shape[:reshaped_maps.ndim//2 - 1]))
 
         output = Parallel(n_jobs=ncores,
                           verbose=verbose)(delayed(proc_inner)(reshaped_maps[i], median, size, method, use_rejection) for i in indexer)
 
-        # Account for padding on each side
-        indexer = (tuple(np.array(idx) + size//2) for idx in indexer)
         indexer = (np.index_exp[idx[0]:idx[0] + size, idx[1]:idx[1] + size, idx[2]:idx[2] + size] for idx in indexer)
 
         # We accumulate the value at each voxel then take the average over the overlap
