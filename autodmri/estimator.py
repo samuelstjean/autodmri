@@ -280,5 +280,10 @@ def proc_inner(cur_map, median, size, method, use_rejection):
         cur_map = cur_map.reshape(size**3, 1, -1)
         sigma, N = get_noise_distribution(cur_map, method=method)
         mask = np.ones_like(cur_map, dtype=np.bool)
+
+        if np.isnan(sigma) or np.isnan(N):
+            sigma = 0
+            N = 0
+
         output = sigma, N, mask
     return output
