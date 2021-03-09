@@ -1,5 +1,11 @@
 # Changelog
 
+## [v0.2.5] - 2021-03-09
+
+- Remove nans from the output when using noise maps.
+- Fix the main script regarding the noise maps to 4d conversion.
+- Remove Dockerfile.
+
 ## [v0.2.4] - 2021-03-09
 
 - Fix an indexing bug for noise maps when going over the full data (the default).

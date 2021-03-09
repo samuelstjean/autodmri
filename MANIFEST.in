@@ -4,5 +4,4 @@ include README.md
 include CHANGELOG.md
 include example.ipynb
 include datasets/*
-include Dockerfile
 include example/

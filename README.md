@@ -13,19 +13,6 @@ pip install autodmri
 
 You can find a quick example and datasets over [here](example) and the full documentation at http://autodmri.rtfd.io/.
 
-### Using Docker
-
-If you have docker, you do not need to install anything else and can use the Dockerfile to get everything.
-You can then mount your data folder to run the script and get the results into the same folder like this.
-
-~~~
-docker pull samuelstjean/autodmri
-docker run -it -v /home/samuel/git/autodmri/datasets:/mnt samuelstjean/autodmri get_distribution /mnt/data_SENSE3_MB3_dwi.nii.gz /mnt/sigma.nii.gz /mnt/N.nii.gz /mnt/mask.nii.gz
-~~~
-
-Just be sure to adapt the path and filename of your data or add more options as needed.
-
-
 ###  The manuscript and references
 
 You can read the [journal version][media] in Medical Image Analysis and the datasets are available here https://zenodo.org/record/2483105.
@@ -72,7 +59,6 @@ pages="304--312",
 isbn="978-3-030-00928-1"
 }
 ~~~
-
 
 ###  Referencing the code itself
 
