@@ -121,6 +121,7 @@ def _inner(data, median, exclude_mask=None, method='moments', l=50, N_min=1, N_m
 
             if mask_current.sum() > mask_loop.sum():
                 mask_loop[:] = mask_current
+
         return mask_loop
 
     # Explicitly remove known artifacts

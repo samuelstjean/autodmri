@@ -37,7 +37,7 @@ def get_noise_distribution(data, method='moments'):
         p2 = mdata2
         sigma = np.sqrt(p1 - p2) / np.sqrt(2)
     elif method == 'maxlk':
-            sigma = maxlk_sigma(data)
+        sigma = maxlk_sigma(data)
     else:
         raise ValueError('Invalid method name {}'.format(method))
 
@@ -47,8 +47,8 @@ def get_noise_distribution(data, method='moments'):
     if method == 'moments':
         N = np.mean(t)
     elif method == 'maxlk':
-            y = np.mean(np.log(t))
-            N = inv_digamma(y)
+        y = np.mean(np.log(t))
+        N = inv_digamma(y)
     else:
         raise ValueError('Invalid method name {}'.format(method))
 
