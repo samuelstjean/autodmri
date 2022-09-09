@@ -1,4 +1,0 @@
-numpy>=1.10
-scipy>=0.19
-nibabel>=2.2
-joblib>=0.12
