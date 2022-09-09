@@ -8,7 +8,6 @@ setup(
     name='autodmri',
     version='0.2.5',
     author='Samuel St-Jean',
-    author_email='samuel@isi.uu.nl',
     packages=find_packages(),
     scripts=['scripts/get_distribution'],
     url='https://github.com/samuelstjean/autodmri',
