@@ -6,7 +6,7 @@ You can change things such as the number of cores for parallel processing, which
 the size of the window, to do a full estimation or only non overlapping windows for noise maps, etc.
 
 ~~~bash
-get_distribution -h
+autodmri_get_distribution -h
 ~~~
 
 Further information is available from the [documentation](https://autodmri.readthedocs.io/en/stable/) as these are more advanced cases.
@@ -31,7 +31,7 @@ The data looks like this
 1. With equations using the moments (the default, also accessible with `-m moments`)
 
 ~~~bash
-get_distribution dwi_1_8.nii.gz sigma.nii.gz N.nii.gz mask.nii.gz
+autodmri_get_distribution dwi_1_8.nii.gz sigma.nii.gz N.nii.gz mask.nii.gz
 ~~~
 
 And the output files looks like that.
@@ -48,7 +48,7 @@ so if we look at an axial view we would only see a single value while the other 
 2. With equations using the maximum likelihood (with the option `-m maxlk`)
 
 ~~~bash
-get_distribution dwi_1_8.nii.gz sigma_maxlk.nii.gz N_maxlk.nii.gz mask_maxlk.nii.gz -m maxlk
+autodmri_get_distribution dwi_1_8.nii.gz sigma_maxlk.nii.gz N_maxlk.nii.gz mask_maxlk.nii.gz -m maxlk
 ~~~
 
 ![](sigma_maxlk.png)
@@ -69,7 +69,7 @@ Notice how every output is now a full fledged 3D maps.
 1. With equations using the moments
 
 ~~~bash
-get_distribution data_SENSE3_MB3_noisemap.nii.gz sigma_nmaps.nii.gz N_nmaps.nii.gz mask_nmaps.nii.gz --noise_maps
+autodmri_get_distribution data_SENSE3_MB3_noisemap.nii.gz sigma_nmaps.nii.gz N_nmaps.nii.gz mask_nmaps.nii.gz --noise_maps
 ~~~
 
 ![](sigma_nmaps.png)
@@ -80,7 +80,7 @@ get_distribution data_SENSE3_MB3_noisemap.nii.gz sigma_nmaps.nii.gz N_nmaps.nii.
 2. With equations using the maximum likelihood
 
 ~~~bash
-get_distribution data_SENSE3_MB3_noisemap.nii.gz sigma_maxlk_nmaps.nii.gz N_maxlk_nmaps.nii.gz mask_maxlk_nmaps.nii.gz -m maxlk --noise_maps
+autodmri_get_distribution data_SENSE3_MB3_noisemap.nii.gz sigma_maxlk_nmaps.nii.gz N_maxlk_nmaps.nii.gz mask_maxlk_nmaps.nii.gz -m maxlk --noise_maps
 ~~~
 
 ![](sigma_maxlk_nmaps.png)
