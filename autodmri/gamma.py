@@ -1,5 +1,3 @@
-from __future__ import division
-
 import numpy as np
 
 from scipy.special import digamma, polygamma
@@ -39,7 +37,7 @@ def get_noise_distribution(data, method='moments'):
     elif method == 'maxlk':
         sigma = maxlk_sigma(data)
     else:
-        raise ValueError('Invalid method name {}'.format(method))
+        raise ValueError(f'Invalid method name {method}')
 
     t = data**2 / (2*sigma**2)
 
@@ -50,7 +48,7 @@ def get_noise_distribution(data, method='moments'):
         y = np.mean(np.log(t))
         N = inv_digamma(y)
     else:
-        raise ValueError('Invalid method name {}'.format(method))
+        raise ValueError(f'Invalid method name {method}')
 
     return sigma, N
 

@@ -1,5 +1,3 @@
-from __future__ import division
-
 import numpy as np
 
 from scipy.ndimage.interpolation import zoom
@@ -112,8 +110,8 @@ def _inner(data, median, exclude_mask=None, method='moments', l=50, N_min=1, N_m
         lambda_minus = lambda_cdf(N_min*K, alpha_prob/2)
         lambda_plus = lambda_cdf(N_max*K, 1 - alpha_prob/2)
 
-        mask_current = np.zeros(data.shape[:-1], dtype=np.bool)
-        mask_loop = np.zeros(data.shape[:-1], dtype=np.bool)
+        mask_current = np.zeros(data.shape[:-1], dtype=bool)
+        mask_loop = np.zeros(data.shape[:-1], dtype=bool)
 
         for sigma in phi:
             s = sum_data2 / (2*sigma**2)
@@ -126,7 +124,7 @@ def _inner(data, median, exclude_mask=None, method='moments', l=50, N_min=1, N_m
 
     # Explicitly remove known artifacts
     if exclude_mask is None:
-        exclude_mask = np.zeros(data.shape[:-1], dtype=np.bool)
+        exclude_mask = np.zeros(data.shape[:-1], dtype=bool)
 
     # we don't know N, so guess parameters iteratively
     data = data.astype(np.float64)  # prevent data**4 overflow
@@ -201,7 +199,7 @@ def estimate_from_nmaps(data, size=5, return_mask=True, method='moments', full=F
     -------
     sigma, N, mask (optional)
     '''
-    m_out = np.zeros(data.shape[:-1], dtype=np.bool)
+    m_out = np.zeros(data.shape[:-1], dtype=bool)
     median = np.median(data)
 
     if median == 0:
@@ -242,7 +240,7 @@ def estimate_from_nmaps(data, size=5, return_mask=True, method='moments', full=F
 
         sigma = np.zeros(reshaped_maps.shape[0], dtype=np.float32)
         N = np.zeros(reshaped_maps.shape[0], dtype=np.float32)
-        mask = np.zeros((reshaped_maps.shape[0], size**3), dtype=np.bool)
+        mask = np.zeros((reshaped_maps.shape[0], size**3), dtype=bool)
 
         output = Parallel(n_jobs=ncores,
                           verbose=verbose)(delayed(proc_inner)(reshaped_maps[i], median, size, method, use_rejection) for i in range(reshaped_maps.shape[0]))
@@ -280,7 +278,7 @@ def proc_inner(cur_map, median, size, method, use_rejection):
     else:
         cur_map = cur_map.reshape(size**3, 1, -1)
         sigma, N = get_noise_distribution(cur_map, method=method)
-        mask = np.ones_like(cur_map, dtype=np.bool)
+        mask = np.ones_like(cur_map, dtype=bool)
 
         if np.isnan(sigma) or np.isnan(N):
             sigma = 0
