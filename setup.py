@@ -5,7 +5,7 @@ with open('README.md', encoding='utf-8') as f:
 
 setup(
     name='autodmri',
-    version='0.2.5',
+    version='0.2.6',
     author='Samuel St-Jean',
     packages=find_packages(),
     scripts=['scripts/autodmri_get_distribution'],
