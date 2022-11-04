@@ -1,15 +1,14 @@
-import io
 from setuptools import setup, find_packages
 
-with io.open('README.md', encoding='utf-8') as f:
+with open('README.md', encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
     name='autodmri',
-    version='0.2.5',
+    version='0.2.6',
     author='Samuel St-Jean',
     packages=find_packages(),
-    scripts=['scripts/get_distribution'],
+    scripts=['scripts/autodmri_get_distribution'],
     url='https://github.com/samuelstjean/autodmri',
     license='MIT',
     description='Implementation of "Automated characterization of noise distributions in diffusion MRI data".',

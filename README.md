@@ -13,6 +13,14 @@ pip install autodmri
 
 You can find a quick example and datasets over [here](example) and the full documentation at http://autodmri.rtfd.io/.
 
+An example, super basic call to the script would be
+
+~~~bash
+autodmri_get_distribution dwi.nii.gz sigma.nii.gz N.nii.gz mask.nii.gz
+~~~
+
+Be sure to check the options by passing `--help` to the script.
+
 ###  The manuscript and references
 
 You can read the [journal version][media] in Medical Image Analysis and the datasets are available here https://zenodo.org/record/2483105.
