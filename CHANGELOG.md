@@ -1,9 +1,15 @@
 # Changelog
 
+## [v0.2.6] - 2022-11-04
+
+- Change the main script name from **get_distribution** to **autodmri_get_distribution** for consistency with the package name.
+- Remove python 2.7 support.
+- Fix some deprecation warnings from numpy.
+
 ## [v0.2.5] - 2021-03-09
 
 - Remove nans from the output when using noise maps.
-- Fix the main script regarding the noise maps to 4d conversion.
+- Fix the main script regarding the noise maps to 4D conversion.
 - Remove Dockerfile.
 
 ## [v0.2.4] - 2021-03-09
