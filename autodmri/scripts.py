@@ -1,11 +1,9 @@
-#!/usr/bin/env python
-
 import numpy as np
 import nibabel as nib
 
+import os
 import argparse
 import logging
-import os
 
 from autodmri.estimator import estimate_from_dwis, estimate_from_nmaps
 
@@ -85,7 +83,7 @@ def buildArgsParser():
                    help='If set, overwrites the output text file if it already exists.')
 
     p.add_argument('-v', '--verbose', action='store_true', dest='verbose',
-                   help='If set, print useful information during processing.')
+                   help='If set, shows a progress bar during processing and prints useful information.')
 
     p.add_argument('-l', '--log', dest='logfile', metavar='file',
                    help='Save the logging output to this file. Implies verbose output.')
