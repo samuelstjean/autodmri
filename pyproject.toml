@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 description = 'Implementation of "Automated characterization of noise distributions in diffusion MRI data".'
 name = "autodmri"
-version = '0.2.6'
+version = '0.2.7'
 authors = [{ name = "Samuel St-Jean" }]
 readme = "README.md"
 requires-python = ">=3.7"
