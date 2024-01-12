@@ -221,6 +221,8 @@ def estimate_from_nmaps(data, size=5, return_mask=True, method='moments', full=F
 
         if verbose:
             ranger = tqdm(indexer)
+        else:
+            ranger = indexer
 
         output = Parallel(n_jobs=ncores)(delayed(proc_inner)(reshaped_maps[i], median, size, method, use_rejection) for i in ranger)
 

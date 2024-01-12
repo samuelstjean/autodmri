@@ -22,7 +22,7 @@ When estimating over noise maps (option `--noise_maps`), the mask instead indica
 
 ### Estimating distributions from DWIs
 
-Here I will use an old invivo dataset I have lying around, which you can download [here](https://github.com/samuelstjean/nlsam_data/raw/master/invivo/dwi_1_8.nii.gz).
+Here I will use an old invivo dataset I have lying around, which you can find in the datasets folder or download [here](https://github.com/samuelstjean/nlsam_data/).
 The data looks like this
 
 ![](dwi_1_8.png)
