@@ -12,11 +12,11 @@ requires-python = ">=3.7"
 license = { text = "MIT" }
 
 dependencies = [
-    'numpy>=1.10',
-    'scipy>=0.19',
+    'numpy>=1.15',
+    'scipy>=1.0',
     'tqdm>=4.56',
     'joblib>=0.12',
-    'nibabel>=2.2',
+    'nibabel>=2.4',
 ]
 
 [project.scripts]
