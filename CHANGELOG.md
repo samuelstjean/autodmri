@@ -1,5 +1,12 @@
 # Changelog
 
+## [v0.2.7]
+
+- Revamp some configs for maintenance (readthedocs, pyproject.toml)
+- Now uses tqdm for the progress bar
+- Moved the main script to a proper entrypoint instead of an added file
+    - This changes nothing in the way the script is called but just makes it more robust on Windows
+
 ## [v0.2.6] - 2022-11-04
 
 - Change the main script name from **get_distribution** to **autodmri_get_distribution** for consistency with the package name.

@@ -7,13 +7,14 @@ from autodmri.gamma import get_noise_distribution
 from autodmri.blocks import extract_patches
 
 from joblib import Parallel, delayed
+from tqdm import tqdm
 
 ###########################################
 # These functions are for over dwis
 ###########################################
 
 
-def estimate_from_dwis(data, axis=-2, return_mask=False, exclude_mask=None, ncores=-1, method='moments', verbose=0, fast_median=False):
+def estimate_from_dwis(data, axis=-2, return_mask=False, exclude_mask=None, ncores=-1, method='moments', verbose=False, fast_median=False):
     '''Given the data, splits over each slice to compute parameters of the gamma distribution
 
     input
@@ -32,7 +33,7 @@ def estimate_from_dwis(data, axis=-2, return_mask=False, exclude_mask=None, ncor
 
         method='moments' or method='maxlk' : which algorithm to use to estimate sigma and N
 
-        verbose : print progress for joblib, can be an integer to increase verbosity
+        verbose : bool, Shows a progress bar for parallel processing
 
         fast_median : Computes the median of medians from each volume.
         Useful for large datasets with many volumes (e.g. HCP) since the median requires a full copy of the data and sorting.
@@ -74,7 +75,10 @@ def estimate_from_dwis(data, axis=-2, return_mask=False, exclude_mask=None, ncor
     else:
         exclude_mask = exclude_mask.swapaxes(0, axis)
 
-    output = Parallel(n_jobs=ncores, verbose=verbose)(delayed(_inner)(swapped_data[i], median, exclude_mask[i], method) for i in ranger)
+    if verbose:
+        ranger = tqdm(ranger)
+
+    output = Parallel(n_jobs=ncores)(delayed(_inner)(swapped_data[i], median, exclude_mask[i], method) for i in ranger)
 
     # output is each slice we took along axis, so the mask might be reversed
     sigma = np.zeros(len(output))
@@ -172,7 +176,7 @@ def _inner(data, median, exclude_mask=None, method='moments', l=50, N_min=1, N_m
 ###########################################
 
 
-def estimate_from_nmaps(data, size=5, return_mask=True, method='moments', full=False, ncores=-1, use_rejection=False, verbose=0):
+def estimate_from_nmaps(data, size=5, return_mask=True, method='moments', full=False, ncores=-1, use_rejection=False, verbose=False):
     '''Given the data, estimates parameters of the gamma distribution in small 3D windows.
 
     input
@@ -193,7 +197,7 @@ def estimate_from_nmaps(data, size=5, return_mask=True, method='moments', full=F
 
         use_rejection : if True, iterate to reject voxels in each estimated window, but this is much slower than just using all of the data.
 
-        verbose : print progress for joblib, can be an integer to increase verbosity
+        verbose : bool, Shows a progress bar for parallel processing
 
     output
     -------
@@ -215,8 +219,12 @@ def estimate_from_nmaps(data, size=5, return_mask=True, method='moments', full=F
 
         indexer = list(np.ndindex(reshaped_maps.shape[:reshaped_maps.ndim//2 - 1]))
 
-        output = Parallel(n_jobs=ncores,
-                          verbose=verbose)(delayed(proc_inner)(reshaped_maps[i], median, size, method, use_rejection) for i in indexer)
+        if verbose:
+            ranger = tqdm(indexer)
+        else:
+            ranger = indexer
+
+        output = Parallel(n_jobs=ncores)(delayed(proc_inner)(reshaped_maps[i], median, size, method, use_rejection) for i in ranger)
 
         indexer = (np.index_exp[idx[0]:idx[0] + size, idx[1]:idx[1] + size, idx[2]:idx[2] + size] for idx in indexer)
 
@@ -242,8 +250,12 @@ def estimate_from_nmaps(data, size=5, return_mask=True, method='moments', full=F
         N = np.zeros(reshaped_maps.shape[0], dtype=np.float32)
         mask = np.zeros((reshaped_maps.shape[0], size**3), dtype=bool)
 
-        output = Parallel(n_jobs=ncores,
-                          verbose=verbose)(delayed(proc_inner)(reshaped_maps[i], median, size, method, use_rejection) for i in range(reshaped_maps.shape[0]))
+        ranger = range(reshaped_maps.shape[0])
+
+        if verbose:
+            ranger = tqdm(ranger)
+
+        output = Parallel(n_jobs=ncores)(delayed(proc_inner)(reshaped_maps[i], median, size, method, use_rejection) for i in ranger)
 
         for i, (s, n, m) in enumerate(output):
             sigma[i] = s
