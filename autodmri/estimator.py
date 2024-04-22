@@ -81,8 +81,8 @@ def estimate_from_dwis(data, axis=-2, return_mask=False, exclude_mask=None, ncor
     output = Parallel(n_jobs=ncores)(delayed(_inner)(swapped_data[i], median, exclude_mask[i], method) for i in ranger)
 
     # output is each slice we took along axis, so the mask might be reversed
-    sigma = np.zeros(len(output))
-    N = np.zeros(len(output))
+    sigma = np.zeros(len(output), dtype=np.float32)
+    N = np.zeros(len(output), dtype=np.float32)
     mask = np.zeros(data.shape[:-1], dtype=np.int16).swapaxes(0, axis)
 
     for i, s in enumerate(output):
