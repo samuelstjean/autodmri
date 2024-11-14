@@ -186,6 +186,8 @@ def main():
     # Save the data
     logger.info(f'Output files are {args.sigma}, {args.N} and {args.mask}')
     mask = mask.astype(np.int16)
+    sigma = sigma.astype(np.float32)
+    N = N.astype(np.float32)
 
     nib.Nifti1Image(sigma, aff).to_filename(args.sigma)
     nib.Nifti1Image(N, aff).to_filename(args.N)
