@@ -4,7 +4,7 @@ import pytest
 from pathlib import Path
 
 cwd = Path(__file__).parents[2] / Path("datasets")
-commands = [['autodmri_get_distribution', 'data_SENSE3_MB3_noisemap.nii.gz', 'sigma_maxlk_nmaps.nii.gz', 'N_maxlk_nmaps.nii.gz', 'mask_maxlk_nmaps.nii.gz', '-m maxlk', '--noise_maps'],
+commands = [['autodmri_get_distribution', 'data_SENSE3_MB3_noisemap.nii.gz', 'sigma_maxlk_nmaps.nii.gz', 'N_maxlk_nmaps.nii.gz', 'mask_maxlk_nmaps.nii.gz', '-m', 'maxlk', '--noise_maps'],
             ['autodmri_get_distribution', 'data_SENSE3_MB3_noisemap.nii.gz', 'sigma_nmaps.nii.gz', 'N_nmaps.nii.gz', 'mask_nmaps.nii.gz', '--noise_maps'],
             ['autodmri_get_distribution', 'data_SENSE3_MB3_noisemap.nii.gz', 'sigma_nmaps.nii.gz', 'N_nmaps.nii.gz', 'mask_nmaps.nii.gz', '--noise_maps', '-f', '--subsample'],
             ['autodmri_get_distribution', 'data_SENSE3_MB3_noisemap.nii.gz', 'sigma_nmaps.nii.gz', 'N_nmaps.nii.gz', 'mask_nmaps.nii.gz', '--noise_maps', '-f', '--fast_median', '-m', 'maxlk'],
