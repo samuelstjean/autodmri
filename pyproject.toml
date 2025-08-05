@@ -8,7 +8,7 @@ name = "autodmri"
 version = '0.2.7'
 authors = [{ name = "Samuel St-Jean" }]
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.9"
 license = { text = "MIT" }
 
 dependencies = [
