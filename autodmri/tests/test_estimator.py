@@ -1,3 +1,5 @@
+from __future__ import annotations # Needed for | annotations on python 3.9
+
 import numpy as np
 import numpy.typing as npt
 import pytest
@@ -13,9 +15,9 @@ methods = ['moments', 'maxlk']
 all_items = product(sigma, N, methods)
 
 @pytest.mark.parametrize('sigma, N, method', all_items)
-def test_script(sigma, N, method):
+def test_estimators(sigma, N, method):
     data = np.zeros([25,25,25,30])
-    data[10:20, 10:20, 10:20] = 100
+    data[10:20, 10:20, 10:20] = 1000
     empty = np.zeros_like(data)
 
     noisy = _make_noise(data, sigma, N)
@@ -42,8 +44,8 @@ def _make_noise(data: npt.NDArray, sigma: float, N: int, seed: int | None = None
 
     for _ in range(N):
         for i in range(data.shape[-1]):
-            n1 = rng.normal(0, sigma, size)
-            n2 = rng.normal(0, sigma, size)
+            n1[:] = rng.normal(0, sigma, size)
+            n2[:] = rng.normal(0, sigma, size)
             out[..., i] += (data[..., i] + n1)**2 + n2**2
 
     return np.sqrt(out)

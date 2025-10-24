@@ -1,6 +1,10 @@
 import numpy as np
 
-from scipy.ndimage.interpolation import zoom
+try:
+    from scipy.ndimage import zoom
+except ImportError:
+    from scipy.ndimage.interpolation import zoom
+
 from scipy.special import gammaincinv
 
 from autodmri.gamma import get_noise_distribution
@@ -103,13 +107,11 @@ def _inner(data, median, exclude_mask=None, method='moments', l=50, N_min=1, N_m
         return out
 
     def get_mask(data, N_min, N_max, phi, alpha_prob=0.05):
-        K = data.shape[-1]
-        sum_data2 = np.sum(data**2, axis=-1)
+        if alpha_prob <= 0 or alpha_prob >= 1:
+            raise ValueError(f'alpha_prob is a parameter in ]0, 1[ with default value 0.05, but has value {alpha_prob}')
 
-        data[data == 0] = np.nan
-        sum_data2 = np.nansum(data**2, axis=-1)
-        K = np.sum(np.isfinite(data), axis=-1)
-        data[np.isnan(data)] = 0
+        K = np.sum(data > 0, axis=-1)
+        sum_data2 = np.sum(data**2, axis=-1)
 
         lambda_minus = lambda_cdf(N_min*K, alpha_prob/2)
         lambda_plus = lambda_cdf(N_max*K, 1 - alpha_prob/2)
@@ -131,7 +133,9 @@ def _inner(data, median, exclude_mask=None, method='moments', l=50, N_min=1, N_m
         exclude_mask = np.zeros(data.shape[:-1], dtype=bool)
 
     # we don't know N, so guess parameters iteratively
-    data = data.astype(np.float64)  # prevent data**4 overflow
+    data = data.astype(np.float64) # prevent data**4 overflow
+    data = np.nan_to_num(data).clip(min=0) # cleanup in case we had bad data somewhere to prevent nan propagation
+
     sigma_prev = -1
     N_prev = -1
     sigma_init = median / np.sqrt(2 * lambda_cdf(N_max, 0.5))
