@@ -1,4 +1,7 @@
+from __future__ import annotations # Needed for | annotations on python 3.9
+
 import numpy as np
+import numpy.typing as npt
 
 from scipy.special import digamma, polygamma
 
@@ -10,6 +13,7 @@ def get_noise_distribution(data, method='moments'):
     -----
     data
         A numpy array of gamma distributed values
+
     method='moments' or method='maxlk'
         Use either the moments or maximum likelihood equations to estimate the parameters.
 
@@ -30,16 +34,13 @@ def get_noise_distribution(data, method='moments'):
     if method == 'moments':
         mdata2 = np.mean(data**2)
         mdata4 = np.mean(data**4)
-
-        p1 = mdata4 / mdata2
-        p2 = mdata2
-        sigma = np.sqrt(p1 - p2) / np.sqrt(2)
+        sigma = np.sqrt(mdata4 / mdata2 - mdata2) / np.sqrt(2)
     elif method == 'maxlk':
         sigma = maxlk_sigma(data)
     else:
         raise ValueError(f'Invalid method name {method}')
 
-    t = data**2 / (2*sigma**2)
+    t = 1/2 * (data / sigma)**2
 
     # Now compute N
     if method == 'moments':
@@ -53,18 +54,17 @@ def get_noise_distribution(data, method='moments'):
     return sigma, N
 
 
-def maxlk_sigma(m, xold=None, eps=1e-8, max_iter=100):
+def maxlk_sigma(m: npt.NDArray, xold: float | None = None, eps: float=1e-8, max_iter: int=100):
     '''Maximum likelihood equation to estimate sigma from gamma distributed values'''
 
-    sum_m2 = np.sum(m**2)
-    K = m.size
-    sum_log_m2 = np.sum(np.log(m**2))
+    mean_m2 = np.mean(m**2)
+    mean_log_m2 = 2 * np.mean(np.log(m))
 
     def f(sigma):
-        return digamma(sum_m2/(2*K*sigma**2)) - sum_log_m2/K + np.log(2*sigma**2)
+        return digamma(mean_m2 / (2*sigma**2)) - mean_log_m2 + np.log(2*sigma**2)
 
     def fprime(sigma):
-        return -sum_m2 * polygamma(1, sum_m2/(2*K*sigma**2)) / (K*sigma**3) + 2/sigma
+        return -mean_m2 * polygamma(1, mean_m2 / (2*sigma**2)) / sigma**3 + 2/sigma
 
     if xold is None:
         xold = m.std()
@@ -81,13 +81,13 @@ def maxlk_sigma(m, xold=None, eps=1e-8, max_iter=100):
     return xnew
 
 
-def inv_digamma(y, eps=1e-8, max_iter=100):
+def inv_digamma(y: float, eps: float=1e-8, max_iter: int=100) -> float:
     '''Numerical inverse to the digamma function by root finding'''
 
     if y >= -2.22:
-        xold = np.exp(y) + 0.5
+        xold = np.exp(y) + 1/2
     else:
-        xold = -1 / (y - digamma(1))
+        xold = -1 / (y + np.euler_gamma)
 
     for _ in range(max_iter):
 

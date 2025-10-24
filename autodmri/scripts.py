@@ -192,7 +192,3 @@ def main():
     nib.Nifti1Image(sigma, aff).to_filename(args.sigma)
     nib.Nifti1Image(N, aff).to_filename(args.N)
     nib.Nifti1Image(mask, aff).to_filename(args.mask)
-
-
-if __name__ == "__main__":
-    main()
