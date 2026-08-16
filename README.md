@@ -7,17 +7,17 @@
 ###  The example and documentation
 
 The latest version can be installed with
-~~~
+```
 pip install autodmri
-~~~
+```
 
 You can find a quick example and datasets over [here](example) and the full documentation at http://autodmri.rtfd.io/.
 
 An example, super basic call to the script would be
 
-~~~bash
+```
 autodmri_get_distribution dwi.nii.gz sigma.nii.gz N.nii.gz mask.nii.gz
-~~~
+```
 
 Be sure to check the options by passing `--help` to the script.
 
@@ -30,7 +30,7 @@ and from the [publisher][miccai_publisher].
 
 Here is a bibtex entry for the journal version
 
-~~~
+```
 @article{St-jean2020_media,
 author = {St-Jean, Samuel and {De Luca}, Alberto and Tax, Chantal M.W. and Viergever, Max A. and Leemans, Alexander},
 doi = {10.1016/j.media.2020.101758},
@@ -43,11 +43,11 @@ title = {{Automated characterization of noise distributions in diffusion MRI dat
 url = {https://linkinghub.elsevier.com/retrieve/pii/S1361841520301225},
 year = {2020}
 }
-~~~
+```
 
 and for the conference manuscript in MICCAI
 
-~~~
+```
 @InProceedings{St-jean2018_miccai,
 author="St-Jean, Samuel
 and De Luca, Alberto
@@ -66,7 +66,7 @@ address="Cham",
 pages="304--312",
 isbn="978-3-030-00928-1"
 }
-~~~
+```
 
 ###  Referencing the code itself
 
