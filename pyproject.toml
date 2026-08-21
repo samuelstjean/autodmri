@@ -24,7 +24,7 @@ autodmri_get_distribution = "autodmri.scripts:main"
 
 [project.urls]
 homepage = "https://github.com/samuelstjean/autodmri"
-documentation = "https://autodmri.readthedocs.io/en/latest/"
+documentation = "https://samuelstjean.github.io/autodmri/"
 changelog = "https://github.com/samuelstjean/autodmri/blob/master/CHANGELOG.md"
 
 [tool.setuptools]
