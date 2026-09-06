@@ -1,6 +1,12 @@
 # Changelog
 
-## [v0.2.7]
+## [v0.2.8] - 2026-09-06
+
+- Test for python 3.10 - 3.15
+- Some internal reworks and optimisation
+- New documentation available at https://samuelstjean.github.io/autodmri/autodmri.html
+
+## [v0.2.7] - 2024-01-22
 
 - Revamp some configs for maintenance (readthedocs, pyproject.toml)
 - Now uses tqdm for the progress bar
