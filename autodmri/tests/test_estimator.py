@@ -1,5 +1,3 @@
-from __future__ import annotations # Needed for | annotations on python 3.9
-
 import numpy as np
 import numpy.typing as npt
 import pytest
@@ -12,7 +10,7 @@ sigma = 1, 10, 50, 100, 200
 N = 1, 4, 8, 12, 24
 methods = ['moments', 'maxlk']
 
-all_items = product(sigma, N, methods)
+all_items = list(product(sigma, N, methods))
 
 @pytest.mark.parametrize('sigma, N, method', all_items)
 def test_estimators(sigma, N, method):

@@ -5,18 +5,18 @@ build-backend = "setuptools.build_meta"
 [project]
 description = 'Implementation of "Automated characterization of noise distributions in diffusion MRI data".'
 name = "autodmri"
-version = '0.2.7'
+version = '0.2.8'
 authors = [{ name = "Samuel St-Jean" }]
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 license = "MIT"
 
 dependencies = [
-    'numpy>=1.15',
+    'numpy>=1.20',
     'scipy>=1.0',
     'tqdm>=4.56',
-    'joblib>=0.12',
-    'nibabel>=2.4',
+    'joblib>=1.0',
+    'nibabel>=3.2',
 ]
 
 [project.scripts]
@@ -24,7 +24,7 @@ autodmri_get_distribution = "autodmri.scripts:main"
 
 [project.urls]
 homepage = "https://github.com/samuelstjean/autodmri"
-documentation = "https://autodmri.readthedocs.io/en/latest/"
+documentation = "https://samuelstjean.github.io/autodmri/"
 changelog = "https://github.com/samuelstjean/autodmri/blob/master/CHANGELOG.md"
 
 [tool.setuptools]
