@@ -12,22 +12,24 @@ jobs:
       id-token: write
     steps:
     - uses: actions/checkout@v7
-    
+
     - name: Set up Python
       uses: actions/setup-python@v7
       with:
         python-version: '3.x'
-    
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install build pdoc
+        python -m pip install build pdoc pytest
+
+    - name: Build and install
+      run: |
+        python -m build -w .
+        python -m pip install dist/*.whl
 
     - name: Make doc
       run: pdoc autodmri/ -o docs
-    
-    - name: Build
-      run: python -m build
 
     - name: upload to pypi
       uses: pypa/gh-action-pypi-publish@release/v1
