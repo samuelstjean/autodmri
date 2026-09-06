@@ -1,10 +1,6 @@
 import numpy as np
 
-try:
-    from scipy.ndimage import zoom
-except ImportError:
-    from scipy.ndimage.interpolation import zoom
-
+from scipy.ndimage import zoom
 from scipy.special import gammaincinv
 
 from autodmri.gamma import get_noise_distribution
