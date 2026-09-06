@@ -24,6 +24,7 @@ jobs:
         python -m pip install build pdoc pytest
 
     - name: Build and install
+      shell: bash
       run: |
         python -m build -w .
         python -m pip install dist/*.whl
