@@ -1,12 +1,10 @@
-from __future__ import annotations # Needed for | annotations on python 3.9
-
 import numpy as np
 import numpy.typing as npt
 
 from scipy.special import digamma, polygamma
 
 
-def get_noise_distribution(data, method='moments'):
+def get_noise_distribution(data: npt.NDArray, method: str='moments'):
     '''Computes sigma and N from an array of gamma distributed data
 
     input

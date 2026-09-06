@@ -1,12 +1,13 @@
 import numpy as np
 import nibabel as nib
 
-import os
 import argparse
 import logging
+import os
 
 from autodmri.estimator import estimate_from_dwis, estimate_from_nmaps
 
+logger = logging.getLogger('autodmri')
 
 DESCRIPTION = """
 Main script for automatically characterizing noise distributions.
@@ -31,13 +32,10 @@ doi: 10.1016/j.media.2020.101758
 Available at: http://www.sciencedirect.com/science/article/pii/S1361841520301225
 """
 
-
 class CustomFormatter(argparse.ArgumentDefaultsHelpFormatter, argparse.RawTextHelpFormatter):
     pass
 
-
 def buildArgsParser():
-
     p = argparse.ArgumentParser(description=DESCRIPTION,
                                 epilog=EPILOG,
                                 formatter_class=CustomFormatter)
@@ -69,7 +67,7 @@ def buildArgsParser():
     p.add_argument('--noise_maps', action='store_true',
                    help='Estimate in small windows instead of whole slices over the input volume. Only valid in theory for noise maps.')
 
-    p.add_argument('--subsample', action='store_true',
+    p.add_argument('--subsample', action='store_false', dest="full",
                    help='If supplied, estimate in non-overlapping windows with option --noise_maps.')
 
     p.add_argument('--fast_median', action='store_true',
@@ -90,12 +88,23 @@ def buildArgsParser():
 
     return p
 
+def check_overwrite(args: argparse.Namespace, parser: argparse.ArgumentParser):
+    overwritable_files = [
+        args.sigma,
+        args.N,
+        args.mask
+    ]
+
+    for f in overwritable_files:
+        if f is not None and os.path.isfile(f):
+            if args.overwrite:
+                logger.warning(f'Overwriting {os.path.realpath(f)}')
+            else:
+                parser.error(f'{f} already exists! Use -f or --force to overwrite it.')
 
 def main():
     parser = buildArgsParser()
     args = parser.parse_args()
-
-    logger = logging.getLogger('autodmri')
 
     if args.logfile is not None:
         handler = logging.FileHandler(args.logfile)
@@ -111,28 +120,12 @@ def main():
         logger.setLevel(logging.INFO)
         logger.info('Verbosity is on')
 
-    overwritable_files = [args.sigma,
-                          args.N,
-                          args.mask]
-
-    for f in overwritable_files:
-        if f is not None and os.path.isfile(f):
-            if args.overwrite:
-                logger.warning(f'Overwriting {os.path.realpath(f)}')
-            else:
-                parser.error(f'{f} already exists! Use -f or --force to overwrite it.')
+    check_overwrite(args, parser)
 
     vol = nib.load(args.data)
     data = vol.get_fdata(dtype=np.float32)
     aff = vol.affine
-    # hdr = vol.header
-
-    ncores = args.ncores
-    method = args.method
-    axis = args.axis
-    full = not args.subsample
-    size = args.size
-    noise_maps = args.noise_maps
+    hdr = vol.header
 
     if args.exclude is not None:
         exclude_mask = nib.load(args.exclude).get_fdata().astype(bool)
@@ -140,10 +133,10 @@ def main():
     else:
         exclude_mask = None
 
-    logger.info(f'Now estimating over file {args.data} with method = {method} and axis = {axis}')
+    logger.info(f'Now estimating over file {args.data} with method = {args.method} and axis = {args.axis}')
 
-    if noise_maps:
-        if full:
+    if args.noise_maps:
+        if args.full:
             overlap = 'overlapping windows'
         else:
             overlap = 'non-overlapping windows'
@@ -151,12 +144,12 @@ def main():
         if data.ndim == 3:
             data = data[..., None]
 
-        logger.info(f'Estimation will be done over noise maps with a window of size {size} and {overlap}')
-        sigma, N, mask = estimate_from_nmaps(data, size=size, return_mask=True, method=method, full=full, ncores=ncores, use_rejection=False, verbose=args.verbose)
+        logger.info(f'Estimation will be done over noise maps with a window of size {args.size} and {overlap}')
+        sigma, N, mask = estimate_from_nmaps(data, size=args.size, return_mask=True, method=args.method, full=args.full, ncores=args.ncores, use_rejection=False, verbose=args.verbose)
 
     else:
-        if axis < 0:
-            axis = data.ndim + axis
+        if args.axis < 0:
+            args.axis = data.ndim + args.axis
 
         if args.fast_median:
             logger.info('Estimation of the medians will be done over each volume, then on the median of the medians.')
@@ -164,21 +157,21 @@ def main():
             logger.warning(f'Estimation of the median will be done over the whole volume, but you have {data.shape[-1]} volumes.\n' +
                            '\tConsider the option --fast_median if memory usage is high and startup time is too long.')
 
-        sigma, N, mask = estimate_from_dwis(data, axis=axis, return_mask=True, exclude_mask=exclude_mask, ncores=ncores,
-                                            method=method, verbose=args.verbose, fast_median=args.fast_median)
+        sigma, N, mask = estimate_from_dwis(data, axis=args.axis, return_mask=True, exclude_mask=exclude_mask, ncores=args.ncores,
+                                            method=args.method, verbose=args.verbose, fast_median=args.fast_median)
 
         # Broadcast the 1D arrays to full 3D
-        if axis == 0:
+        if args.axis == 0:
             sigma = sigma[:, None, None]
             N = N[:, None, None]
-        elif axis == 1:
+        elif args.axis == 1:
             sigma = sigma[None, :, None]
             N = N[None, :, None]
-        elif axis == 2:
+        elif args.axis == 2:
             sigma = sigma[None, None, :]
             N = N[None, None, :]
         else:
-            raise ValueError(f'axis = {axis} is not 0, 1 or 2, but that should never happen!')
+            raise ValueError(f'axis = {args.axis} is not 0, 1 or 2, but that should never happen!')
 
         sigma = np.ones(mask.shape) * sigma
         N = np.ones(mask.shape) * N
@@ -189,6 +182,9 @@ def main():
     sigma = sigma.astype(np.float32)
     N = N.astype(np.float32)
 
-    nib.Nifti1Image(sigma, aff).to_filename(args.sigma)
-    nib.Nifti1Image(N, aff).to_filename(args.N)
-    nib.Nifti1Image(mask, aff).to_filename(args.mask)
+    hdr.set_data_dtype(np.float32)
+    nib.Nifti1Image(sigma, aff, hdr).to_filename(args.sigma)
+    nib.Nifti1Image(N, aff, hdr).to_filename(args.N)
+
+    hdr.set_data_dtype(np.int16)
+    nib.Nifti1Image(mask, aff, hdr).to_filename(args.mask)
