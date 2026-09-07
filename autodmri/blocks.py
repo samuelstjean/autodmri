@@ -49,13 +49,16 @@ def extract_patches(arr, patch_shape, extraction_step, flatten=True):
     ----------
     arr : ndarray
         n-dimensional array of which patches are to be extracted
+        
     patch_shape : integer or tuple of length arr.ndim
         Indicates the shape of the patches to be extracted. If an
         integer is given, the shape will be a hypercube of
         sidelength given by its value.
+        
     extraction_step : integer or tuple of length arr.ndim
         Indicates step size at which extraction shall be performed.
         If integer is given, then the step is uniform in all dimensions.
+        
     Returns
     -------
     patches : strided ndarray
